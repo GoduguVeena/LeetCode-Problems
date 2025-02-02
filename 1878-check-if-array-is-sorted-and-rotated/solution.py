@@ -1,4 +1,5 @@
 class Solution:
     def check(self, nums: List[int]) -> bool:
-        return sum(nums[i - 1] > v 
-        for i, v in enumerate(nums)) <= 1
+        return (cntD:=sum(y<x for x, y in pairwise(nums)))==0 or (cntD==1 and nums[-1]<=nums[0])
+
+        
