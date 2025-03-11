@@ -1,27 +1,21 @@
 class Solution:
     def numberOfSubstrings(self, s: str) -> int:
-        left = right = total = 0
-        # Track frequency of a, b, c
-        freq = [0] * 3
+        arr=[0]*3
+        cnt=0
+        n=len(s)
 
-        while right < len(s):
-            # Add character at right pointer to frequency array
-            freq[ord(s[right]) - ord("a")] += 1
+        i=n-1
+        j=n-1
 
-            # While we have all required characters
-            while self._has_all_chars(freq):
-                # All substrings from current window to end are valid
-                # Add count of valid substrings
-                total += len(s) - right
+        while i>=0 and j>=0:
+            arr[ord(s[i])-ord('a')]+=1
 
-                # Remove leftmost character and move left pointer
-                freq[ord(s[left]) - ord("a")] -= 1
-                left += 1
+            while arr[0]>0 and arr[1]>0 and arr[2]>0:
+                cnt+=i+1
+                arr[ord(s[j])-ord('a')]-=1
+                j-=1
+            
+            i-=1
+        
 
-            right += 1
-
-        return total
-
-    def _has_all_chars(self, freq: list) -> bool:
-        # Check if we have at least one of each character
-        return all(f > 0 for f in freq)
+        return cnt
