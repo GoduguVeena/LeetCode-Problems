@@ -1,14 +1,13 @@
-class Solution(object):
-    def findDifferentBinaryString(self, nums):
-        """
-        :type nums: List[str]
-        :rtype: str
-        """
-        res=[]
-        for i in range(0, len(nums)):
-            if nums[i][i]=='0':
-                res.append('1')
-            else:
-                res.append('0')
+class Solution:
+    def findDifferentBinaryString(self, nums: List[str]) -> str:
+        integers = set()
+        for num in nums:
+            integers.add(int(num, 2))
 
-        return "".join(res)
+        n = len(nums)
+        for num in range(n + 1):
+            if num not in integers:
+                ans = bin(num)[2:]
+                return "0" * (n - len(ans)) + ans
+            
+        return ""
