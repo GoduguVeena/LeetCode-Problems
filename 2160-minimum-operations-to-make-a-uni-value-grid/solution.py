@@ -1,51 +1,27 @@
 class Solution:
-    def minOperations(self, grid: List[List[int]], x: int) -> int:
-        total_amount = len(grid) * len(grid[0])
-        min_num = max_num = grid[0][0]
-        for row in grid:
-            for num in row:
-                min_num = min(min_num, num)
-                max_num = max(max_num, num)
-        
-        left = min_num
-        right = max_num
-        pivot = None
-        while left <= right:
-            poss_pivot = (left + right) // 2
-            less, equal, more = 0, 0, 0
-            for row in grid:
-                for num in row:
-                    if num < poss_pivot:
-                        less += 1
-                    elif num == poss_pivot:
-                        equal += 1
-                    else:
-                        more += 1
-            if not equal:
-                if more <= total_amount // 2:
-                    right = poss_pivot - 1
-                else:
-                    left = poss_pivot + 1
-                continue
-            if less == more:
-                pivot = poss_pivot
-                break
-            if less > more:
-                if more + equal >= (total_amount + 1) // 2:
-                    pivot = poss_pivot
-                    break
-                right = poss_pivot - 1
-            else:
-                if less + equal >= (total_amount + 1) // 2:
-                    pivot = poss_pivot
-                    break
-                left = poss_pivot + 1
+    def minOperations(self, grid, x):
+        # Create a list to store all the numbers from the grid
+        nums_array = []
+        result = 0
 
-        res = 0
+        # Flatten the grid into nums_array
         for row in grid:
             for num in row:
-                diff = abs(num - pivot)
-                if diff % x:
-                    return -1
-                res += diff // x
-        return res 
+                nums_array.append(num)
+
+        # Sort nums_array in non-decreasing order to easily find the median
+        nums_array.sort()
+
+        length = len(nums_array)
+        # Store the median element as the final common value
+        final_common_number = nums_array[length // 2]
+
+        # Iterate through each number in nums_array
+        for number in nums_array:
+            # If the remainder when divided by x is different, return -1
+            if number % x != final_common_number % x:
+                return -1
+            # Add the number of operations required to make the current number equal to final_common_number
+            result += abs(final_common_number - number) // x
+
+        return result
