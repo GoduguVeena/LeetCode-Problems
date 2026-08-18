@@ -1,11 +1,22 @@
 class Solution {
     public int fib(int n) {
-        int a=0,b=1;
-        while(n-- > 0){
-            int c=a+b;
-            a=b;
-            b=c;
+        // Handle base cases early to avoid out-of-bounds errors
+        if (n <= 1) {
+            return n;
         }
-        return a;
+        
+        // Array size must be n + 1 to include index n
+        int[] tab = new int[n + 1]; 
+        
+        // Initial values
+        tab[0] = 0;
+        tab[1] = 1;
+        
+        // Iteration method
+        for(int i = 2; i <= n; i++){
+            tab[i] = tab[i - 1] + tab[i - 2];
+        }
+        
+        return tab[n];
     }
 }
