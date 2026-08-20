@@ -1,40 +1,62 @@
 class Solution {
-    private List<List<String>>ans=new ArrayList<>();
-    private int[] col;
-    private int[] dg;
-    private int[] udg;
-    private String[][] g;
-    private int n;
-
-    public List<List<String>> solveNQueens(int n) {
-        this.n=n;
-        col=new int[n];
-        dg=new int[n << 1];
-        udg=new int[n <<1];
-        g=new String[n][n];
-        for (int i=0;i<n;++i){
-             Arrays.fill(g[i], ".");
+    private boolean isSafe(int row, int col, 
+                        char[][] cboard, int n){
+        //horizontal check 
+        for(int i=0; i<n; i++){
+            if(cboard[row][i]=='Q'){
+                return false;
+            }
         }
-        dfs(0);
-        return ans;
+        //vertical check 
+        for(int j=0; j<n; j++){
+            if(cboard[j][col]=='Q'){
+                return false;
+            }
+        }
+        //left diagonal check
+        int i,j; 
+        for(i=row, j=col; i>=0 && j>=0; i--, j--){
+            if(cboard[i][j]=='Q'){
+                return false;
+            }
+        }
+        //right diagonal check 
+        for(i=row, j=col; i>=0 && j<n; i--, j++){
+            if(cboard[i][j]=='Q'){
+                return false;
+            }
+        }
+        return true;
     }
-    private void dfs(int i){
-        if(i==n){
-            List<String> t =new ArrayList<>();
-            for(int j=0;j<n;++j){
-                t.add(String.join("",g[j]));
+    private void backTracking(int row,int n,char[][] cboard, 
+            List<List<String>> res){
+        //store the correct combinations in the res 
+        if(row==n){
+            List<String> x  = new ArrayList<>();
+            for(int i=0; i<n; i++){
+                x.add(new String(cboard[i]));
             }
-            ans.add(t);
-            return;
+            res.add(x);
+            return ;
         }
-        for(int j=0;j<n;++j){
-            if(col[j]+dg[i+j]+udg[n-i+j]==0){
-                g[i][j]="Q";
-                col[j]=dg[i+j] =udg[n-i+j]=1;
-                dfs(i+1);
-                col[j]=dg[i+j]=udg[n-i+j]=0;
-                g[i][j]=".";
+        //placing the queens on the board 
+        for(int col=0; col<n; col++ ){
+            if(isSafe(row, col, cboard, n)){
+                cboard[row][col]= 'Q';
+                backTracking(row+1, n, cboard, res);
+                cboard[row][col]='.';
             }
         }
+    }
+    
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> res = new ArrayList<>();
+        //[["..Q."]]
+        char[][] cboard = new char[n][n];
+        for(char[] c: cboard){
+            Arrays.fill(c, '.');
+        }
+        backTracking(0, n, cboard, res);
+        return res;
     }
 }
