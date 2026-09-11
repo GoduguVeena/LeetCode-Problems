@@ -2,6 +2,12 @@ name: Sync Leetcode
 
 on:
   workflow_dispatch:
+    inputs:
+      commit_msg:
+        description: 'Custom commit message header'
+        required: false
+        default: '[LeetCode Sync]'
+        type: string
   schedule:
     - cron: "0 8 * * 6"
 
@@ -16,4 +22,4 @@ jobs:
           leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
           leetcode-session: ${{ secrets.LEETCODE_SESSION }}
           verbose: true
-          commit-header: "[LeetCode Sync]"
+          commit-header: ${{ github.event.inputs.commit_msg || '[LeetCode Sync]' }}
